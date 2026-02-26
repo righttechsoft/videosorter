@@ -1,0 +1,29 @@
+<UserControl x:Class="VideoSorter.Views.FolderBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Margin="6" Padding="6,4" Background="#2A2A2A" CornerRadius="3"
+            Cursor="Hand" MouseLeftButtonUp="Path_Click">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#333"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <TextBlock Text="{Binding CurrentPath}" FontSize="11" Foreground="#CCC"
+                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                   ToolTip="{Binding CurrentPath}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="TextDecorations" Value="Underline"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Border>
+</UserControl>

@@ -1,0 +1,99 @@
+<UserControl x:Class="VideoSorter.Views.VideoItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:VideoSorter.Converters">
+    <UserControl.Resources>
+        <converters:FileSizeConverter x:Key="FileSizeConverter"/>
+        <converters:TimeSpanToStringConverter x:Key="TimeSpanConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
+    <Border BorderBrush="#444" BorderThickness="0,0,0,1" Padding="8,6"
+            Background="Transparent" Cursor="Hand">
+        <Border.InputBindings>
+            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding PlayCommand}"/>
+        </Border.InputBindings>
+        <Border.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Play" Command="{Binding PlayCommand}"/>
+                <Separator/>
+                <MenuItem Header="Rename" Command="{Binding StartRenameCommand}"/>
+                <MenuItem Header="Copy to..." Command="{Binding CopyToCommand}"/>
+                <MenuItem Header="Move to..." Command="{Binding MoveToCommand}"/>
+            </ContextMenu>
+        </Border.ContextMenu>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Thumbnails -->
+            <ItemsControl Grid.Column="0" ItemsSource="{Binding Thumbnails}" Margin="0,0,10,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding}" Width="160" Height="90" Stretch="Uniform" Margin="0,0,2,0"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Loading placeholder when no thumbnails yet -->
+            <Border Grid.Column="0" Width="160" Height="90" Background="#333"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"
+                    Margin="0,0,10,0">
+                <TextBlock Text="Loading..." Foreground="#888"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+
+            <!-- Metadata -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <!-- Filename (display mode) -->
+                <TextBlock Text="{Binding FileName}" FontSize="14" FontWeight="SemiBold"
+                           Foreground="#EEE" TextTrimming="CharacterEllipsis"
+                           Visibility="{Binding IsRenaming, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"
+                           MouseLeftButtonDown="FileName_MouseLeftButtonDown"/>
+
+                <!-- Filename (rename mode) -->
+                <Grid Visibility="{Binding IsRenaming, Converter={StaticResource BoolToVis}}">
+                    <TextBox x:Name="RenameBox" Text="{Binding RenameText, UpdateSourceTrigger=PropertyChanged}"
+                             FontSize="14" Padding="2" Loaded="RenameBox_Loaded">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding CommitRenameCommand}"/>
+                            <KeyBinding Key="Escape" Command="{Binding CancelRenameCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </Grid>
+
+                <!-- Format info line -->
+                <TextBlock Foreground="#AAA" FontSize="12" Margin="0,2,0,0">
+                    <Run Text="{Binding Extension, Mode=OneWay}"/>
+                    <Run Text=" | "/>
+                    <Run Text="{Binding FileSize, Mode=OneWay, Converter={StaticResource FileSizeConverter}}"/>
+                    <Run Text=" | "/>
+                    <Run Text="{Binding Width, Mode=OneWay}"/><Run Text="x"/><Run Text="{Binding Height, Mode=OneWay}"/>
+                    <Run Text=" | "/>
+                    <Run Text="{Binding Duration, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}"/>
+                </TextBlock>
+
+                <!-- Tracks line -->
+                <TextBlock Foreground="#888" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap">
+                    <Run Text="Video: "/><Run Text="{Binding VideoCodecs, Mode=OneWay}"/>
+                    <Run Text=" | Audio: "/><Run Text="{Binding AudioCodecs, Mode=OneWay}"/>
+                </TextBlock>
+
+                <!-- Subtitles line (only if subtitles exist) -->
+                <TextBlock Foreground="#888" FontSize="11" Margin="0,1,0,0"
+                           Visibility="{Binding HasSubtitles, Converter={StaticResource BoolToVis}}">
+                    <Run Text="Subtitles: "/><Run Text="{Binding SubtitleLanguages, Mode=OneWay}"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

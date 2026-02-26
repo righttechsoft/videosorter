@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:ffmpeg.org)",
+      "Bash(dotnet:*)",
+      "Bash(dotnet --list-sdks:*)",
+      "Bash(where:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(findstr:*)",
+      "Bash(ffprobe:*)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:deepwiki.com)",
+      "WebFetch(domain:code.videolan.org)",
+      "WebFetch(domain:docs.videolan.me)",
+      "WebFetch(domain:codesailer.com)",
+      "Bash(dir /s /b \"F:\\\\RTS\\\\videoorganiser\\\\*.csproj\")",
+      "WebFetch(domain:videolan.videolan.me)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:forum.videolan.org)",
+      "WebFetch(domain:wiki.videolan.org)"
+    ]
+  }
+}
